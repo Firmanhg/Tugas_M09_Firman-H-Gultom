@@ -17,4 +17,17 @@ def hitung_denda(hari_terlambat):
 
     return min(denda, DENDA_MAKS)
 
-    
+
+def cek_kelayakan_pinjam(tier, jumlah):
+    if jumlah < 0:
+        raise ValueError("Jumlah pinjaman tidak boleh negatif")
+
+    tier = tier.lower()
+
+    if tier == "reguler":
+        return jumlah < BATAS_REGULER
+
+    if tier == "premium":
+        return jumlah < BATAS_PREMIUM
+
+    raise ValueError("Tier anggota tidak valid")
