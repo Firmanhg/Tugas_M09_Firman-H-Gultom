@@ -1,6 +1,5 @@
 import pytest
-from peminjaman import hitung_denda
-
+from peminjaman import hitung_denda, cek_kelayakan_pinjam
 
 @pytest.mark.parametrize("hari, harapan", [
     (0, 0),
@@ -16,3 +15,29 @@ def test_hitung_denda(hari, harapan):
 def test_hari_negatif_ditolak():
     with pytest.raises(ValueError):
         hitung_denda(-1)
+
+
+from peminjaman import cek_kelayakan_pinjam
+
+
+@pytest.mark.parametrize("tier, jumlah, harapan", [
+    ("Reguler", 0, True),
+    ("Reguler", 4, True),
+    ("Reguler", 5, False),
+    ("Premium", 6, True),
+    ("Premium", 7, False),
+    ("premium", 3, True),
+    ("PREMIUM", 3, True)
+])
+def test_cek_kelayakan_pinjam(tier, jumlah, harapan):
+    assert cek_kelayakan_pinjam(tier, jumlah) is harapan
+
+
+def test_jumlah_negatif_ditolak():
+    with pytest.raises(ValueError):
+        cek_kelayakan_pinjam("Reguler", -1)
+
+
+def test_tier_tidak_valid_ditolak():
+    with pytest.raises(ValueError):
+        cek_kelayakan_pinjam("VIP", 2)
